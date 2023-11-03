@@ -107,7 +107,7 @@ class Board:
             a tuple of row, column index identifying the most constrained cell
         """
 
-        shortest_list: List = []
+        shortest_list: List[int] = []
         indices = Tuple[int, int]
         for i in range(self.size):
             for j in range(self.size):
@@ -141,12 +141,7 @@ class Board:
             True if we've placed all numbers, False otherwise
         """
 
-        for row in self.rows:
-            for cell in row:
-                if isinstance(cell, list):
-                    return False
-
-        return True
+        return self.num_nums_placed == self.size * self.size
 
     def update(self, row: int, column: int, assignment: int) -> None:
         """Assigns the given value to the cell given by passed in row and column
@@ -162,9 +157,15 @@ class Board:
         """
         
         self.rows[row][column] = assignment
+        self.num_nums_placed += 1
 
-        remove_if_exists(self.rows[row], assignment)
+        for i in range(self.size):
+            remove_if_exists(self.rows[row][i], assignment)
+            remove_if_exists(self.rows[i][column], assignment)
 
+        grid = self.subgrid_coordinates(row, column)
+        for x, y in grid:
+            remove_if_exists(self.rows[x][y], assignment)
 
 def DFS(state: Board) -> Board:
     """Performs a depth first search. Takes a Board and attempts to assign values to
@@ -178,8 +179,21 @@ def DFS(state: Board) -> Board:
     Returns:
         either None in the case of invalid input or a solved board
     """
-    pass
 
+    stack = Stack()
+    stack.push(state)
+
+    while not stack.is_empty():
+        if state.goal_test():
+            return state
+
+        cell = state.find_most_constrained_cell()
+        assignment = state.rows[cell[0], cell[1]]
+        
+        for num in assignment:
+            state.update(cell[0], cell[1], num)
+
+        return None if state.failure_test() else state
 
 def BFS(state: Board) -> Board:
     """Performs a breadth first search. Takes a Board and attempts to assign values to
@@ -197,6 +211,10 @@ def BFS(state: Board) -> Board:
 
 
 if __name__ == "__main__":
+
+    # b = Board()
+    # print(b)
+    # b.print_pretty()
     # uncomment the below lines once you've implemented the board class
    
     # # CODE BELOW HERE RUNS YOUR BFS/DFS
