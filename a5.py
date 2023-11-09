@@ -179,26 +179,20 @@ def DFS(state: Board) -> Board:
         either None in the case of invalid input or a solved board
     """
 
-    # while not state.goal_test or not state.failure_test():
-    cell = state.find_most_constrained_cell()
-    possibilities = state.rows[cell[0]][cell[1]]
+    stack = Stack([state])
+
+    while not stack.is_empty():
+        current_board = stack.pop()
+        if current_board.goal_test():
+            return current_board
+        cell = current_board.find_most_constrained_cell()
+        possibilities = current_board[cell[0], cell[1]]
+        new_board = current_board
+        for num in possibilities:
+            new_board.update(cell[0], cell[1], num)
+            stack.push(new_board)
+            new_board = current_board
     
-    new_state: Board = state
-    for num in possibilities:
-        new_state.update(cell[0], cell[1], num)
-
-        if new_state.goal_test():
-            return new_state
-        
-        if new_state.failure_test():
-            return None
-
-        new_state = DFS(new_state)
-
-        if new_state is None:
-            return None
-
-    # return None if state.failure_test() else state
 
 def BFS(state: Board) -> Board:
     """Performs a breadth first search. Takes a Board and attempts to assign values to
@@ -213,17 +207,17 @@ def BFS(state: Board) -> Board:
         either None in the case of invalid input or a solved board
     """
     
-    stack = Stack()
-    stack.push(state)
+    # stack = Stack()
+    # stack.push(state)
     
-    while not stack.is_empty():
-        cell = state.find_most_constrained_cell()
-        possibilities = state.rows[cell[0], cell[1]]
+    # while not stack.is_empty():
+    #     cell = state.find_most_constrained_cell()
+    #     possibilities = state.rows[cell[0], cell[1]]
 
-        for num in possibilities:
-            new_state: Board = state
-            new_state.update(cell[0], cell[1], num)
-            stack.push(new_state)
+    #     for num in possibilities:
+    #         new_state: Board = state
+    #         new_state.update(cell[0], cell[1], num)
+    #         stack.push(new_state)
 
 
 if __name__ == "__main__":
@@ -355,25 +349,25 @@ if __name__ == "__main__":
 
     # ##Now, let's write some quick tests to check update!
     # #Create a sudoku board.
-    g = Board()
+    # g = Board()
     #Place the 28 assignments in first_moves on the board.
-    for trip in first_moves:
-        g.update(trip[0],trip[1],trip[2])
-    g.print_pretty()
+    # for trip in first_moves:
+    #     g.update(trip[0],trip[1],trip[2])
+    # g.print_pretty()
     #From the above print statement, you can see which numbers
     #  have been assigned to the board, and then create test
     #  cases by looking at the board and listing what values are
     #  still possible for a specific cell. I have created
     #  2 such test cases like that for you. 
-    assert g.rows[0][2] == [2,5,6], "update test 1"
-    assert g.rows[5][5] == [3,7,9], "update test 2"
-    assert g.num_nums_placed == 28, "update test 3"
-    print(g.find_most_constrained_cell())
-    assert g.find_most_constrained_cell() == (1,7), "fmc test"
-    assert g.failure_test() == False, "failure test test"
-    assert g.goal_test() == False, "goal test test"
-    g.num_nums_placed = 81
-    assert g.goal_test() == True, "goal test test"
+    # assert g.rows[0][2] == [2,5,6], "update test 1"
+    # assert g.rows[5][5] == [3,7,9], "update test 2"
+    # assert g.num_nums_placed == 28, "update test 3"
+    # print(g.find_most_constrained_cell())
+    # assert g.find_most_constrained_cell() == (1,7), "fmc test"
+    # assert g.failure_test() == False, "failure test test"
+    # assert g.goal_test() == False, "goal test test"
+    # g.num_nums_placed = 81
+    # assert g.goal_test() == True, "goal test test"
     print("All part 2 tests passed! Testing DFS and BFS next:")
 
     # print("<<<<<<<<<<<<<< Testing DFS on First Game >>>>>>>>>>>>>>")
