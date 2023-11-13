@@ -182,17 +182,18 @@ def DFS(state: Board) -> Board:
     stack = Stack([state])
 
     while not stack.is_empty():
+        # print(stack)
         current_board = stack.pop()
-        if current_board.goal_test():
-            return current_board
-        cell = current_board.find_most_constrained_cell()
-        possibilities = current_board[cell[0], cell[1]]
-        new_board = current_board
-        for num in possibilities:
-            new_board.update(cell[0], cell[1], num)
-            stack.push(new_board)
-            new_board = current_board
+
+        if current_board.goal_test(): return current_board
+        elif not current_board.failure_test():
+            row, column = current_board.find_most_constrained_cell()
+            for num in current_board.rows[row][column]:
+                new_board = copy.deepcopy(current_board)
+                new_board.update(row, column, num)
+                stack.push(new_board)
     
+    return None
 
 def BFS(state: Board) -> Board:
     """Performs a breadth first search. Takes a Board and attempts to assign values to
@@ -207,18 +208,19 @@ def BFS(state: Board) -> Board:
         either None in the case of invalid input or a solved board
     """
     
-    # stack = Stack()
-    # stack.push(state)
-    
-    # while not stack.is_empty():
-    #     cell = state.find_most_constrained_cell()
-    #     possibilities = state.rows[cell[0], cell[1]]
+    queue = Queue([state])
 
-    #     for num in possibilities:
-    #         new_state: Board = state
-    #         new_state.update(cell[0], cell[1], num)
-    #         stack.push(new_state)
-
+    while not queue.is_empty():
+        current_board = queue.pop()
+        
+        if current_board.goal_test(): return current_board
+        elif not current_board.failure_test():
+            row, column = current_board.find_most_constrained_cell()
+            for num in current_board.rows[row][column]:
+                new_board = copy.deepcopy(current_board)
+                new_board.update(row, column, num)
+                queue.push(new_board)
+    return None
 
 if __name__ == "__main__":
 
@@ -350,10 +352,14 @@ if __name__ == "__main__":
     # ##Now, let's write some quick tests to check update!
     # #Create a sudoku board.
     # g = Board()
-    #Place the 28 assignments in first_moves on the board.
+    # #Place the 28 assignments in first_moves on the board.
     # for trip in first_moves:
     #     g.update(trip[0],trip[1],trip[2])
     # g.print_pretty()
+    # print(g)
+    # solution = BFS(g)
+    # solution.print_pretty()
+    # print(solution)
     #From the above print statement, you can see which numbers
     #  have been assigned to the board, and then create test
     #  cases by looking at the board and listing what values are
@@ -368,21 +374,21 @@ if __name__ == "__main__":
     # assert g.goal_test() == False, "goal test test"
     # g.num_nums_placed = 81
     # assert g.goal_test() == True, "goal test test"
-    print("All part 2 tests passed! Testing DFS and BFS next:")
+    # print("All part 2 tests passed! Testing DFS and BFS next:")
 
-    # print("<<<<<<<<<<<<<< Testing DFS on First Game >>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<< Testing DFS on First Game >>>>>>>>>>>>>>")
 
     test_dfs_or_bfs(True, first_moves)
 
-    # print("<<<<<<<<<<<<<< Testing DFS on Second Game >>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<< Testing DFS on Second Game >>>>>>>>>>>>>>")
 
-    # test_dfs_or_bfs(True, second_moves)
+    test_dfs_or_bfs(True, second_moves)
 
-    # print("<<<<<<<<<<<<<< Testing BFS on First Game >>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<< Testing BFS on First Game >>>>>>>>>>>>>>")
 
-    # test_dfs_or_bfs(False, first_moves)
+    test_dfs_or_bfs(False, first_moves)
 
-    # print("<<<<<<<<<<<<<< Testing BFS on Second Game >>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<< Testing BFS on Second Game >>>>>>>>>>>>>>")
 
-    # test_dfs_or_bfs(False, second_moves)
+    test_dfs_or_bfs(False, second_moves)
     pass
