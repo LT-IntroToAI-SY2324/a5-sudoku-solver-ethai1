@@ -4,6 +4,8 @@ from typing import List, Any, Tuple
 # import Stack and Queue classes for BFS/DFS
 from stack_and_queue import Stack, Queue
 
+import time
+
 # HELPER FUNCTION TO REMOVE ITEMS FROM A LIST
 def remove_if_exists(lst: Any, elem: Any) -> None:
     """Takes a list and element and removes that element if it exists in the list
@@ -180,12 +182,16 @@ def DFS(state: Board) -> Board:
     """
 
     stack = Stack([state])
+    count = 0
 
     while not stack.is_empty():
         # print(stack)
         current_board = stack.pop()
+        count += 1
 
-        if current_board.goal_test(): return current_board
+        if current_board.goal_test(): 
+            print(f"Took {count} iterations to solve.")
+            return current_board
         elif not current_board.failure_test():
             row, column = current_board.find_most_constrained_cell()
             for num in current_board.rows[row][column]:
@@ -209,11 +215,16 @@ def BFS(state: Board) -> Board:
     """
     
     queue = Queue([state])
+    count = 0
 
     while not queue.is_empty():
+        # print(queue)
         current_board = queue.pop()
+        count += 1
         
-        if current_board.goal_test(): return current_board
+        if current_board.goal_test(): 
+            print(f"Took {count} iterations to solve")
+            return current_board
         elif not current_board.failure_test():
             row, column = current_board.find_most_constrained_cell()
             for num in current_board.rows[row][column]:
@@ -378,17 +389,25 @@ if __name__ == "__main__":
 
     print("<<<<<<<<<<<<<< Testing DFS on First Game >>>>>>>>>>>>>>")
 
-    test_dfs_or_bfs(True, first_moves)
+    # start = time.time()
+    test_dfs_or_bfs(True, first_moves) # 0.027 seconds, 59 iterations
+    # print(time.time() - start)
 
     print("<<<<<<<<<<<<<< Testing DFS on Second Game >>>>>>>>>>>>>>")
 
-    test_dfs_or_bfs(True, second_moves)
+    # start = time.time()
+    test_dfs_or_bfs(True, second_moves) # 0.08 seconds, 337 iterations
+    # print(time.time() - start)
 
     print("<<<<<<<<<<<<<< Testing BFS on First Game >>>>>>>>>>>>>>")
 
-    test_dfs_or_bfs(False, first_moves)
+    # start = time.time()
+    test_dfs_or_bfs(False, first_moves) # 0.04 seconds, 59 iterations
+    # print(time.time() - start)
 
     print("<<<<<<<<<<<<<< Testing BFS on Second Game >>>>>>>>>>>>>>")
 
-    test_dfs_or_bfs(False, second_moves)
-    pass
+    # start = time.time()
+    test_dfs_or_bfs(False, second_moves) # 0.11 seconds, 556 iterations
+    # print(time.time() - start)
+    # pass

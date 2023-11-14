@@ -31,7 +31,8 @@ class Stack:
 
     def __str__(self) -> str:
         """String representation of the stack"""
-        return f"The stack contains: {self.the_stack}"
+        # return f"The stack contains: {self.the_stack}"
+        return f"The length of the stack is: {len(self.the_stack)}"
 
     def is_empty(self) -> bool:
         """Check if stack has no elements
@@ -83,7 +84,8 @@ class Queue:
 
     def __str__(self) -> str:
         """String representation of the queue"""
-        return f"The queue contains: {self.the_queue}"
+        # return f"The queue contains: {self.the_queue}"
+        return f"The length of the queue is: {len(self.the_queue)}"
 
     def is_empty(self) -> bool:
         """Check if queue has no elements
