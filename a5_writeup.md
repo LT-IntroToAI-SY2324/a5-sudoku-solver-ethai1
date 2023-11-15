@@ -30,5 +30,5 @@ Using different data strucutures changed how the program went through processing
 
 
 3. Considering the current implementation, how might the Sudoku solver be adapted or extended for larger puzzles or different types of grid-based logic games? How can the lessons learned from this assignment be applied to real-world problem-solving or optimization challenges?
-For larger Sudoku puzzles, we can change the size variable in the board class while for different board games, the board stays mostly the same with perhaps size differences while the code for it is obviously completely different.
+For larger Sudoku puzzles, we can change the size variable in the board class while for different board games, the board stays mostly the same with perhaps size differences while the code for it is obviously completely different. We can also use DFS and BFS for other algorithms that are perhaps more practical and useful than in a sudoku solver along with data structures that can optimize any program that you want.
 
